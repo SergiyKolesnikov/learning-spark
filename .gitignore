@@ -1,0 +1,13 @@
+/data/.ipynb_checkpoints
+/data_output/*
+!/data_output/.gitkeep
+/.ipynb_checkpoints
+/jars/*
+!/jars/.gitkeep
+/LearningSparkV2-master
+/notebooks/spark-streaming-checkpoints
+/notebooks/derby.log
+/notebooks/.ipynb_checkpoints
+/notebooks/metastore_db
+/notebooks/spark-warehouse
+/.venv

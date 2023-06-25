@@ -1,0 +1,117 @@
+x-kafka-environment: &kafka-environment
+  ALLOW_PLAINTEXT_LISTENER: "yes"
+  KAFKA_ENABLE_KRAFT: "yes"
+  KAFKA_KRAFT_CLUSTER_ID: xcm7zqQVQTCaojXuKRacbA
+  KAFKA_CFG_PROCESS_ROLES: broker,controller
+  KAFKA_CFG_INTER_BROKER_LISTENER_NAME: CLIENT
+  KAFKA_CFG_CONTROLLER_LISTENER_NAMES: CONTROLLER
+  KAFKA_CFG_LISTENERS: "CLIENT://:9092,EXTERNAL://:9093,CONTROLLER://:9094"
+  KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: "CLIENT:PLAINTEXT,EXTERNAL:PLAINTEXT,CONTROLLER:PLAINTEXT"
+  KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: "1@kafka1:9094,2@kafka2:9094,3@kafka3:9094"
+
+x-kafka-healthcheck: &kafka-healthcheck
+  test: "kafka-topics.sh --bootstrap-server localhost:9092 --list || exit 1"
+  start_period: 5s
+  timeout: 5s
+  retries: 3
+  interval: 10s
+
+services:
+  kafka1:
+    image: docker.io/bitnami/kafka:3.4.0-debian-11-r21
+    ports:
+      - "9093:9093"
+    environment:
+      <<: *kafka-environment
+      KAFKA_CFG_ADVERTISED_LISTENERS: "CLIENT://kafka1:9092,EXTERNAL://localhost:9093"
+      KAFKA_BROKER_ID: 1
+    healthcheck:
+      <<: *kafka-healthcheck
+
+  kafka2:
+    image: docker.io/bitnami/kafka:3.4.0-debian-11-r21
+    ports:
+      - "9094:9093"
+    environment:
+      <<: *kafka-environment
+      KAFKA_CFG_ADVERTISED_LISTENERS: "CLIENT://kafka2:9092,EXTERNAL://localhost:9094"
+      KAFKA_BROKER_ID: 2
+    healthcheck:
+      <<: *kafka-healthcheck
+
+  kafka3:
+    image: docker.io/bitnami/kafka:3.4.0-debian-11-r21
+    ports:
+      - "9095:9093"
+    environment:
+      <<: *kafka-environment
+      KAFKA_CFG_ADVERTISED_LISTENERS: "CLIENT://kafka3:9092,EXTERNAL://localhost:9095"
+      KAFKA_BROKER_ID: 3
+    healthcheck:
+      <<: *kafka-healthcheck
+
+  schemaregistry:
+    image: confluentinc/cp-schema-registry:latest
+    depends_on:
+      kafka1:
+        condition: service_healthy
+      kafka2:
+        condition: service_healthy
+      kafka3:
+        condition: service_healthy
+    environment:
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: "PLAINTEXT://kafka1:9092,PLAINTEXT://kafka2:9092,PLAINTEXT://kafka3:9092"
+      SCHEMA_REGISTRY_HOST_NAME: schemaregistry
+      SCHEMA_REGISTRY_LISTENERS: "http://0.0.0.0:8085"
+    ports:
+      - "8085:8085"
+    healthcheck:
+      <<: *kafka-healthcheck
+      test: "curl http://localhost:8085/subjects || exit 1"
+
+  wait-for-schemaregistry:
+    image: confluentinc/cp-schema-registry:latest
+    command: "/usr/bin/curl http://schemaregistry:8085/subjects"
+    depends_on:
+      schemaregistry:
+        condition: service_healthy
+
+  akhq:
+    image: tchiotludo/akhq
+    depends_on:
+      kafka1:
+        condition: service_healthy
+      kafka2:
+        condition: service_healthy
+      kafka3:
+        condition: service_healthy
+      schemaregistry:
+        condition: service_healthy
+    environment:
+      AKHQ_CONFIGURATION: |
+        akhq:
+          connections:
+            docker-kafka-server:
+              properties:
+                bootstrap.servers: "kafka1:9092,kafka2:9092,kafka3:9092"
+              schema-registry:
+                url: "http://schemaregistry:8085"
+              # connect:
+              #   - name: "connect"
+              #     url: "http://connect:8083"
+    ports:
+      - "8086:8080"
+
+  postgres:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: example
+    ports:
+      - "5432:5432"
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "8087:8080"
