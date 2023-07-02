@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "spark"
 version = "0.1.0"
-description = ""
+description = "A local dev environment to follow the examples in 'Learning Spark' 2nd edition by Damji et al."
 authors = ["Sergiy Kolesnikov <SergiyKolesnikov@users.noreply.github.com>"]
 readme = "README.md"
 
