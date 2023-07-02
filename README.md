@@ -56,3 +56,9 @@ docker compose up --detach
 ```
 
 See `docker-compose.yml` for the corresponding ports and credentials of the services.
+
+To stop PostgreSQL and Kafka run
+
+```sh
+docker compose down --remove-orphans --volumes
+```
