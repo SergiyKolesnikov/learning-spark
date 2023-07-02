@@ -8,6 +8,7 @@ x-kafka-environment: &kafka-environment
   KAFKA_CFG_LISTENERS: "CLIENT://:9092,EXTERNAL://:9093,CONTROLLER://:9094"
   KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: "CLIENT:PLAINTEXT,EXTERNAL:PLAINTEXT,CONTROLLER:PLAINTEXT"
   KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: "1@kafka1:9094,2@kafka2:9094,3@kafka3:9094"
+  KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
 
 x-kafka-healthcheck: &kafka-healthcheck
   test: "kafka-topics.sh --bootstrap-server localhost:9092 --list || exit 1"
