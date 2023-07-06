@@ -5,8 +5,7 @@
 /jars/*
 !/jars/.gitkeep
 /LearningSparkV2-master
-/notebooks/spark-streaming-checkpoints
-/notebooks/spark-streaming-checkpoints-json
+/notebooks/spark-streaming-checkpoints*
 /notebooks/derby.log
 /notebooks/.ipynb_checkpoints
 /notebooks/metastore_db
