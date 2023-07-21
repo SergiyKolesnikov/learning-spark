@@ -1,4 +1,5 @@
 /data/.ipynb_checkpoints
+/data/words_dir
 /data_output/*
 !/data_output/.gitkeep
 /.ipynb_checkpoints
