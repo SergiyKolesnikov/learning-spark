@@ -7,7 +7,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.11"
-jupyterlab = "^4.0.1"
+jupyterlab = "^4.0.4"
 pyspark = {extras = ["ml", "mllib", "sql"], version = "^3.4.0"}
 
 [build-system]
