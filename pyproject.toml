@@ -9,6 +9,7 @@ readme = "README.md"
 python = "^3.11"
 jupyterlab = "^4.0.4"
 pyspark = {extras = ["ml", "mllib", "sql"], version = "^3.4.0"}
+mlflow = "^2.5.0"
 
 [build-system]
 requires = ["poetry-core"]
