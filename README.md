@@ -2,7 +2,7 @@
 
 A local dev environment to follow the examples in ["Learning Spark" 2nd edition
 by Damji et
-al.](https://pages.databricks.com/rs/094-YMS-629/images/LearningSpark2.0.pdf)
+al.](https://web.archive.org/web/20230114135611/https://pages.databricks.com/rs/094-YMS-629/images/LearningSpark2.0.pdf)
 
 The dev environment provides PySpark and Jupyter installations to work with the
 code examples.  The Docker Compose file provides PostgreSQL and Kafka (with the
