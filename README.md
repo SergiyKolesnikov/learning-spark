@@ -10,6 +10,7 @@ corresponding Web-UIs) to try out connecting to them from Spark.
 
 # Requirements
 
+- [asdf](https://github.com/asdf-community/asdf-python) (with the Python plugin)
 - [Python](https://github.com/asdf-community/asdf-python) >=3.11
 - Java >=11
 - [Docker](https://docs.docker.com/engine/install/) >= 24.0.2
@@ -22,7 +23,8 @@ the `jars` directory.
 # Setup
 
 ``` sh
-poetry install
+asdf local python 3.11.2  # or whatever 3.11.x version you have installed
+POETRY_VIRTUALENVS_PREFER_ACTIVE_PYTHON=true poetry install
 ```
 
 # Usage
